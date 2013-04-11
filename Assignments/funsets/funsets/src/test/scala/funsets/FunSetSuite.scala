@@ -50,9 +50,29 @@ class FunSetSuite extends FunSuite {
   
   import FunSets._
 
-  test("contains is implemented") {
+  test("contains with universal set") {
     assert(contains(x => true, 100))
   }
+  
+  
+  test("contains with null set") {
+    expectResult(false){
+      contains(x => false, 100)
+    }
+    
+  }
+  
+  test("exists with universal set") {
+    assert(exists(x => true, x=> x>100))
+  }
+  
+  
+  test("exists with null set") {
+    expectResult(false){
+    	exists(x => false, x => x>100)
+    }
+  }
+  
   
   /**
    * When writing tests, one would often like to re-use certain values for multiple
@@ -86,7 +106,7 @@ class FunSetSuite extends FunSuite {
    * Once you finish your implementation of "singletonSet", exchange the
    * function "ignore" by "test".
    */
-  ignore("singletonSet(1) contains 1") {
+  test("singletonSet(1) contains 1") {
     
     /**
      * We create a new instance of the "TestSets" trait, this gives us access
@@ -101,7 +121,7 @@ class FunSetSuite extends FunSuite {
     }
   }
 
-  ignore("union contains all elements") {
+  test("union contains all elements") {
     new TestSets {
       val s = union(s1, s2)
       assert(contains(s, 1), "Union 1")
