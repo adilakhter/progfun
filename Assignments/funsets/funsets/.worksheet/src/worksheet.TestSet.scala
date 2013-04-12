@@ -52,7 +52,8 @@ object TestSet {
 
   setWithElementOverOne(4);System.out.println("""res14: Boolean = """ + $show(res$14));$skip(25); 
 
-  printSet(setUnion123);$skip(32); val res$15 = 
+  printSet(setUnion123);$skip(36); val res$15 = 
+  
   forall(setUnion123, x => x>0);System.out.println("""res15: Boolean = """ + $show(res$15));$skip(32); val res$16 = 
   forall(setUnion123, x => x>2);System.out.println("""res16: Boolean = """ + $show(res$16));$skip(32); val res$17 = 
   forall(setUnion123, x => x>3);System.out.println("""res17: Boolean = """ + $show(res$17));$skip(32); val res$18 = 
@@ -60,10 +61,28 @@ object TestSet {
   
   printSet(setUnion123);$skip(32); val res$19 = 
   exists(setUnion123, x => x>2);System.out.println("""res19: Boolean = """ + $show(res$19));$skip(32); val res$20 = 
-  exists(setUnion123, x => x>0);System.out.println("""res20: Boolean = """ + $show(res$20));$skip(32); val res$21 = 
-  exists(setUnion123, x => x>3);System.out.println("""res21: Boolean = """ + $show(res$21));$skip(41); 
+  exists(setUnion123, x => x>2);System.out.println("""res20: Boolean = """ + $show(res$20));$skip(37); val res$21 = 
+   
+  exists(setUnion123, x => x>0);System.out.println("""res21: Boolean = """ + $show(res$21));$skip(32); val res$22 = 
+  exists(setUnion123, x => x>3);System.out.println("""res22: Boolean = """ + $show(res$22));$skip(35); val res$23 = 
   
-  printSet(map(setUnion123, x=> x*x))}
+  exists(setUnion123, x => x>0);System.out.println("""res23: Boolean = """ + $show(res$23));$skip(32); val res$24 = 
+  exists(setUnion123, x => x>3);System.out.println("""res24: Boolean = """ + $show(res$24));$skip(35); val res$25 = 
   
+  exists(setUnion123, x => x>1);System.out.println("""res25: Boolean = """ + $show(res$25));$skip(32); val res$26 = 
+  exists(setUnion123, x => x>2);System.out.println("""res26: Boolean = """ + $show(res$26));$skip(31); val res$27 = 
+  exists(setUnion123, x=>true);System.out.println("""res27: Boolean = """ + $show(res$27));$skip(41); 
+  
+  printSet(map(setUnion123, x=> x*x));$skip(35); val res$28 = 
+  
+  forall(setUnion123, x => x>0);System.out.println("""res28: Boolean = """ + $show(res$28));$skip(32); val res$29 = 
+  forall(setUnion123, x => x>2);System.out.println("""res29: Boolean = """ + $show(res$29));$skip(32); val res$30 = 
+  forall(setUnion123, x => x>3);System.out.println("""res30: Boolean = """ + $show(res$30));$skip(32); val res$31 = 
+  forall(setUnion123, x => x<4);System.out.println("""res31: Boolean = """ + $show(res$31));$skip(38); val res$32 = 
+  
+  
+  exists(setUnion123, x => x>2);System.out.println("""res32: Boolean = """ + $show(res$32));$skip(43); 
+  
+  printSet(map1(setUnion123, x => x*x))}
   
 }

@@ -55,6 +55,7 @@ object TestSet {
   setWithElementOverOne(4)                        //> res14: Boolean = false
 
   printSet(setUnion123)                           //> {1,2,3}
+  
   forall(setUnion123, x => x>0)                   //> res15: Boolean = true
   forall(setUnion123, x => x>2)                   //> res16: Boolean = false
   forall(setUnion123, x => x>3)                   //> res17: Boolean = false
@@ -62,10 +63,28 @@ object TestSet {
   
   printSet(setUnion123)                           //> {1,2,3}
   exists(setUnion123, x => x>2)                   //> res19: Boolean = true
-  exists(setUnion123, x => x>0)                   //> res20: Boolean = true
-  exists(setUnion123, x => x>3)                   //> res21: Boolean = false
+  exists(setUnion123, x => x>2)                   //> res20: Boolean = true
+   
+  exists(setUnion123, x => x>0)                   //> res21: Boolean = true
+  exists(setUnion123, x => x>3)                   //> res22: Boolean = false
+  
+  exists(setUnion123, x => x>0)                   //> res23: Boolean = true
+  exists(setUnion123, x => x>3)                   //> res24: Boolean = false
+  
+  exists(setUnion123, x => x>1)                   //> res25: Boolean = true
+  exists(setUnion123, x => x>2)                   //> res26: Boolean = true
+  exists(setUnion123, x=>true)                    //> res27: Boolean = true
   
   printSet(map(setUnion123, x=> x*x))             //> {1,4,9}
   
+  forall(setUnion123, x => x>0)                   //> res28: Boolean = true
+  forall(setUnion123, x => x>2)                   //> res29: Boolean = false
+  forall(setUnion123, x => x>3)                   //> res30: Boolean = false
+  forall(setUnion123, x => x<4)                   //> res31: Boolean = true
+  
+  
+  exists(setUnion123, x => x>2)                   //> res32: Boolean = true
+  
+  printSet(map1(setUnion123, x => x*x))           //> {1,4,9}
   
 }

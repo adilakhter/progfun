@@ -53,51 +53,38 @@ object FunSets {
   /**
    * Returns whether all bounded integers within `s` satisfy `p`.
    */
-  //  def forall(s: Set, p: Int => Boolean):Boolean = {
-  ////    def iter(a: Int): Boolean= {
-  ////      if (a>bound) true
-  ////      else if (contains(s,a) && !p(a)) false 
-  ////      else iter(a+1)
-  ////    }
-  ////    iter(-bound)
-  //    forallLifted(s, i=> !p(i), (x,y)=>x&&y, false)
-  //    
-  //  }
-  
-  
-  def forallLifted(s: Set, p: Int => Boolean, f: (Boolean, Boolean) => Boolean, successValue: Boolean): Boolean = {
-    def iter(a: Int): Boolean = {
-      if (a > bound) !successValue
-      else if (f(contains(s, a), p(a))) successValue
-      else iter(a + 1)
+  def forall(s: Set, p: Int => Boolean):Boolean = {
+    def iter(a: Int): Boolean= {
+      if (a>bound) true
+      else if (contains(s,a) && !p(a)) false 
+      else iter(a+1)
     }
     iter(-bound)
   }
-  /**
-   * Returns whether all bounded integers within `s` satisfy `p`.
-   */
-  def forall(s: Set, p: Int => Boolean): Boolean = forallLifted(s, !p(_), (x, y) => x && y, false)
-
+  
   /**
    * Returns whether there exists a bounded integer within `s`
    * that satisfies `p`.
    */
-  def exists(s: Set, p: Int => Boolean): Boolean = forallLifted(s, p, (x, y) => x && y, true)
-
+  def exists(s: Set, p: Int => Boolean):Boolean = !forall(s, x=> !p(x))
+  
+ 
   /**
    * Returns a set transformed by applying `f` to each element of `s`.
    */
-  def map(s: Set, f: Int => Int): Set = { 
-    val nullSet:Set= x => false 
-    def iter(i: Int, acc: Set): Set= {
-      if (i > bound) acc
-      else if (contains(s, i)) iter(i+1, union(acc,singletonSet(f(i))))
-      else iter(i+1, acc)
-    }
-    
-    iter(-bound, nullSet)
-  }
-
+//  def map(s: Set, f: Int => Int): Set = {
+//    val emptySet: Set = x => false
+//    def iter(i: Int, acc: Set): Set = {
+//      if (i > bound) acc
+//      else if (contains(s, i)) iter(i + 1, union(acc, singletonSet(f(i))))
+//      else iter(i + 1, acc)
+//    }
+//
+//    iter(-bound, emptySet)
+//  }
+  
+  def map(s: Set, f: Int => Int): Set =  x => exists(s, f(_) == x)
+  
   /**
    * Displays the contents of a set
    */
