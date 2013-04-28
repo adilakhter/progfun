@@ -81,8 +81,8 @@ object TestSet {
   forall(setUnion123, x => x<4);System.out.println("""res31: Boolean = """ + $show(res$31));$skip(38); val res$32 = 
   
   
-  exists(setUnion123, x => x>2);System.out.println("""res32: Boolean = """ + $show(res$32));$skip(43); 
+  exists(setUnion123, x => x>2);System.out.println("""res32: Boolean = """ + $show(res$32));$skip(42); 
   
-  printSet(map1(setUnion123, x => x*x))}
+  printSet(map(setUnion123, x => x*x))}
   
 }
