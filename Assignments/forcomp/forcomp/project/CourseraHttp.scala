@@ -36,10 +36,10 @@ object CourseraHttp {
    * SUBMITTING
    */
 
-  def getChallenge(email: String, assignmentPartId: String): ValidationNEL[String, Challenge] = {
-    val baseReq = url(challengeUrl)
+  def getChallenge(email: String, submitProject: ProjectDetails): ValidationNEL[String, Challenge] = {
+    val baseReq = url(challengeUrl(submitProject.courseId))
     val withArgs = baseReq << Map("email_address" -> email,
-                                  "assignment_part_sid" -> assignmentPartId,
+                                  "assignment_part_sid" -> submitProject.assignmentPartId,
                                   "response_encoding" -> "delim")
 
     executeRequest(withArgs) { res =>
@@ -53,7 +53,7 @@ object CourseraHttp {
     }
   }
 
-  def submitSolution(sourcesJar: File, assignmentPartId: String, challenge: Challenge, chResponse: String): ValidationNEL[String, String] = {
+  def submitSolution(sourcesJar: File, submitProject: ProjectDetails, challenge: Challenge, chResponse: String): ValidationNEL[String, String] = {
     val fileLength = sourcesJar.length()
     if (!sourcesJar.exists()) {
       ("Sources jar archive does not exist\n"+ sourcesJar.getAbsolutePath).failNel
@@ -78,8 +78,8 @@ object CourseraHttp {
         ("Failed to read the sources jar archive, size read: "+ sizeRead).failNel
       } else {
         val fileData = encodeBase64(bytes)
-        val baseReq = url(submitUrl)
-        val withArgs = baseReq << Map("assignment_part_sid" -> assignmentPartId,
+        val baseReq = url(submitUrl(submitProject.courseId))
+        val withArgs = baseReq << Map("assignment_part_sid" -> submitProject.assignmentPartId,
                                       "email_address" -> challenge.email,
                                       "submission" -> fileData,
                                       "submission_aux" -> "",
@@ -172,9 +172,9 @@ object CourseraHttp {
    * SUBMITTING GRADES
    */
 
-  def submitGrade(feedback: String, score: String, apiState: String, apiKey: String): ValidationNEL[String, Unit] = {
+  def submitGrade(feedback: String, score: String, apiState: String, apiKey: String, gradeProject: ProjectDetails): ValidationNEL[String, Unit] = {
     import DefaultJsonProtocol._
-    val baseReq = url(Settings.uploadFeedbackUrl)
+    val baseReq = url(Settings.uploadFeedbackUrl(gradeProject.courseId))
     val withArgs = baseReq << Map("api_state" -> apiState, "score" -> score, "feedback" -> feedback) <:< Map("X-api-key" -> apiKey)
     executeRequest(withArgs) { res =>
       try {

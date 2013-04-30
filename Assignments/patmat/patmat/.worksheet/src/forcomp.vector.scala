@@ -28,4 +28,5 @@ object vector {;import org.scalaide.worksheet.runtime.library.WorksheetSupport._
   
   isPrime(5);System.out.println("""res4: Boolean = """ + $show(res$4))}
   
+  
 }

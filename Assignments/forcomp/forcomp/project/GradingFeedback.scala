@@ -153,8 +153,7 @@ object GradingFeedback {
       |
       |Take a careful look at the compiler output below - maybe you can find out what the problem is.
       |
-      |If you cannot find a solution, ask for help on the discussion forums on the course website:
-      |  %s""".stripMargin.format(Settings.forumUrl)
+      |If you cannot find a solution, ask for help on the discussion forums on the course website.""".stripMargin
 
 
   private val testCompileFailedMessage =
@@ -173,9 +172,7 @@ object GradingFeedback {
       | - Take a careful look at the error messages from the Scala compiler below. They should give
       |   you a hint where your code has an unexpected shape.
       |
-      |If you cannot find a solution, ask for help on the discussion forums [1] on the course website.
-      |
-      |[1] Course forum: %s""".stripMargin.format(Settings.forumUrl)
+      |If you cannot find a solution, ask for help on the discussion forums on the course website.""".stripMargin
 
 
   private def testsFailedMessage(score: Double) =

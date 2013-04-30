@@ -36,7 +36,7 @@ import com.typesafe.sbteclipse.plugin.EclipsePlugin.EclipseKeys
  *  - http://www.jarvana.com/jarvana/view/commons-codec/commons-codec/1.4/commons-codec-1.4-javadoc.jar!/index.html
  *
  * Scalatest
- *  - http://doc.scalatest.org/1.8/index.html#org.scalatest.package
+ *  - http://doc.scalatest.org/1.9.1/index.html#org.scalatest.package
  */
 object ProgFunBuild extends Build {
 
@@ -120,43 +120,45 @@ object ProgFunBuild extends Build {
             |`project/` directory. If this error persits, ask for help on the course forums.""".format(currentProject).stripMargin +"\n "
         s.log.error(msg)
         failSubmit()
-      } else args match {
-        case email :: otPassword :: Nil =>
-          lazy val wrongNameMsg =
-            """Unknown project name: %s
-              |
-              |This error only appears if there are mistakes in the build scripts. Please re-download the assignment
-              |from the coursera webiste. Make sure that you did not perform any changes to the build files in the
-              |`project/` directory. If this error persits, ask for help on the course forums.""".format(projectName).stripMargin +"\n "
-          // log strips empty lines at the ond of `msg`. to have one we add "\n "
-          val details = detailsMap.getOrElse(projectName, {s.log.error(wrongNameMsg); failSubmit()})
-          submitSources(sourcesJar, details.assignmentPartId, email, otPassword, s.log)
-        case _ =>
-          val msg =
-            """No e-mail address and / or submission password provided. The required syntax for `submit` is
-              |  submit <e-mail> <submissionPassword>
-              |
-              |The submission password, which is NOT YOUR LOGIN PASSWORD, can be obtained from the assignment page
-              |  https://class.coursera.org/%s/assignment/index""".format(Settings.courseId).stripMargin +"\n "
-          s.log.error(msg)
-          failSubmit()
+      } else {
+        lazy val wrongNameMsg =
+          """Unknown project name: %s
+            |
+            |This error only appears if there are mistakes in the build scripts. Please re-download the assignment
+            |from the coursera webiste. Make sure that you did not perform any changes to the build files in the
+            |`project/` directory. If this error persits, ask for help on the course forums.""".format(projectName).stripMargin +"\n "
+        // log strips empty lines at the ond of `msg`. to have one we add "\n "
+        val details = detailsMap.getOrElse(projectName, {s.log.error(wrongNameMsg); failSubmit()})
+        args match {
+          case email :: otPassword :: Nil =>
+            submitSources(sourcesJar, details, email, otPassword, s.log)
+          case _ =>
+            val msg =
+              """No e-mail address and / or submission password provided. The required syntax for `submit` is
+                |  submit <e-mail> <submissionPassword>
+                |
+                |The submission password, which is NOT YOUR LOGIN PASSWORD, can be obtained from the assignment page
+                |  https://class.coursera.org/%s/assignment/index""".format(details.courseId).stripMargin +"\n "
+            s.log.error(msg)
+            failSubmit()
+        }
       }
     }
   }
 
 
-  def submitSources(sourcesJar: File, partId: String, email: String, otPassword: String, logger: Logger) {
+  def submitSources(sourcesJar: File, submitProject: ProjectDetails, email: String, otPassword: String, logger: Logger) {
     import CourseraHttp._
     logger.info("Connecting to coursera. Obtaining challenge...")
     val res = for {
-      challenge  <- getChallenge(email, partId)
+      challenge  <- getChallenge(email, submitProject)
       chResponse <- {
         logger.info("Computing challenge response...")
         challengeResponse(challenge, otPassword).successNel[String]
       }
       response   <- {
         logger.info("Submitting solution...")
-        submitSolution(sourcesJar, partId, challenge, chResponse)
+        submitSolution(sourcesJar, submitProject, challenge, chResponse)
       }
     } yield response
 
@@ -448,7 +450,7 @@ object ProgFunBuild extends Build {
    */
 
   val getSubmission = TaskKey[Unit]("getSubmission")
-  val getSubmissionSetting = getSubmission <<= (baseDirectory, gradeProjectDetails, scalaSource in Compile) map { (baseDir, project, scalaSrcDir) =>
+  val getSubmissionSetting = getSubmission <<= (baseDirectory, scalaSource in Compile) map { (baseDir, scalaSrcDir) =>
     readAndUnpackSubmission(baseDir, scalaSrcDir)
   }
 
@@ -608,7 +610,7 @@ object ProgFunBuild extends Build {
   val grade = TaskKey[Unit]("grade")
 
   // mapR: submit the grade / feedback in any case, also on failure
-  val gradeSetting = grade <<= (scalaTestSubmission, styleCheckSubmission, apiKey, streams) mapR { (_, _, apiKeyR, s) =>
+  val gradeSetting = grade <<= (scalaTestSubmission, styleCheckSubmission, apiKey, gradeProjectDetails, streams) mapR { (_, _, apiKeyR, projectDetailsR, s) =>
     val logOpt = s match {
       case Value(v) => Some(v.log)
       case _ => None
@@ -619,7 +621,8 @@ object ProgFunBuild extends Build {
         // if build failed early, we did not even get the api key from the submission queue
         if (!GradingFeedback.apiState.isEmpty && !Settings.offlineMode) {
           val scoreString = "%.2f".format(GradingFeedback.totalScore)
-          CourseraHttp.submitGrade(GradingFeedback.feedbackString(), scoreString, GradingFeedback.apiState, apiKey) match {
+          val Value(projectDetails) = projectDetailsR
+          CourseraHttp.submitGrade(GradingFeedback.feedbackString(), scoreString, GradingFeedback.apiState, apiKey, projectDetails) match {
             case Failure(msgs) =>
               sys.error(msgs.list.mkString("\n"))
             case _ =>
@@ -639,4 +642,5 @@ object ProgFunBuild extends Build {
 case class ProjectDetails(packageName: String,
                           assignmentPartId: String,
                           maxScore: Double,
-                          styleScoreRatio: Double)
+                          styleScoreRatio: Double,
+                          courseId: String)

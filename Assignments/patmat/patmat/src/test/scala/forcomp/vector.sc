@@ -32,4 +32,5 @@ object vector {
   
   isPrime(5)                                      //> res4: Boolean = true
   
+  
 }

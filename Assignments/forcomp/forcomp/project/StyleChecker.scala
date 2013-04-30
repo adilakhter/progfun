@@ -46,8 +46,15 @@ object StyleChecker {
     scala.math.max(maxResult - penalties, 0)
   }
 
-  def assess(sources: Seq[File]): (String, Int) = {
+  def assess(allSources: Seq[File]): (String, Int) = {
     val configFile = new File("project/scalastyle_config.xml").getAbsolutePath
+
+    val sources = allSources.filterNot{ f =>
+      val path = f.getAbsolutePath
+      path.contains("interpreter") ||
+      path.contains("simulations") ||
+      path.contains("fetchtweets")
+    }
 
     val messages = new ScalastyleChecker().checkFiles(
       ScalastyleConfiguration.readFromXml(configFile),
@@ -63,7 +70,7 @@ object StyleChecker {
       "Processed " + outputResult.files + " file(s)\n" +
       "Found " + outputResult.errors + " errors\n" +
       "Found " + outputResult.warnings + " warnings\n" +
-      (if (outputResult.errors+outputResult.warnings > 0) "Consult the style guide at http://goo.gl/5CIum" else "")
+      (if (outputResult.errors+outputResult.warnings > 0) "Consult the style guide at https://class.coursera.org/progfun-002/wiki/view?page=GradingPolicy" else "")
 
     (msg, score(outputResult))
   }

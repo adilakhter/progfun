@@ -1,12 +1,15 @@
 import java.io.File
 
 package object common {
-  /** `???` can be used for marking methods that remain to be implemented.
-   *  @throws  An `Error`
-   */
-  def ??? : Nothing = throw new Error("an implementation is missing")
 
+  /** An alias for the `Nothing` type.
+   *  Denotes that the type should be filled in.
+   */
   type ??? = Nothing
+
+  /** An alias for the `Any` type.
+   *  Denotes that the type should be filled in.
+   */
   type *** = Any
 
   

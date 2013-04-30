@@ -1,16 +1,16 @@
 object Settings {
   // when changing this, also look at 'scripts/gradingImpl' and the files in s3/settings
-  val courseId = "progfun-2012-001"
+  // val courseId = "progfun-2012-001"
 
-  val challengeUrl = "https://class.coursera.org/"+ courseId +"/assignment/challenge"
+  def challengeUrl(courseId: String) = "https://class.coursera.org/"+ courseId +"/assignment/challenge"
 
-  val submitUrl = "https://class.coursera.org/"+ courseId +"/assignment/submit"
+  def submitUrl(courseId: String) = "https://class.coursera.org/"+ courseId +"/assignment/submit"
 
-  val forumUrl = "https://class.coursera.org/"+ courseId +"/forum/index"
+  // def forumUrl(courseId: String) = "https://class.coursera.org/"+ courseId +"/forum/index"
 
-  val submitQueueUrl = "https://class.coursera.org/"+ courseId +"/assignment/api/pending_submission"
+  // def submitQueueUrl(courseId: String) = "https://class.coursera.org/"+ courseId +"/assignment/api/pending_submission"
 
-  val uploadFeedbackUrl = "https://class.coursera.org/"+ courseId +"/assignment/api/score"
+  def uploadFeedbackUrl(courseId: String) = "https://class.coursera.org/"+ courseId +"/assignment/api/score"
 
   val maxSubmitFileSize = {
     val mb = 1024 * 1024
@@ -25,8 +25,8 @@ object Settings {
   val submissionJarFileName = "submittedSrc.jar"
 
   // time in seconds that we give scalatest for running
-  val scalaTestTimeout = 240
-  val individualTestTimeout = 30
+  val scalaTestTimeout = 320
+  val individualTestTimeout = 40
 
   // default weight of each test in a GradingSuite, in case no weight is given
   val scalaTestDefaultWeigth = 10
