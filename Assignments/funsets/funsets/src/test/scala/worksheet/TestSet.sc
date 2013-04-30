@@ -85,6 +85,6 @@ object TestSet {
   
   exists(setUnion123, x => x>2)                   //> res32: Boolean = true
   
-  printSet(map1(setUnion123, x => x*x))           //> {1,4,9}
+  printSet(map(setUnion123, x => x*x))            //> {1,4,9}
   
 }
